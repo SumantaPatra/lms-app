@@ -31,6 +31,7 @@ const formSchema = z.object({
 
 const ChapterForm = ({ initialData }: ChapterFormProps) => {
   const [isCreating, setIsCreating] = useState(false);
+  const [isUpdating,setIsUpdating] = useState(false);
   const toggleCreating = () => setIsCreating((currState) => !currState);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -50,6 +51,24 @@ const ChapterForm = ({ initialData }: ChapterFormProps) => {
       toast.error("Something went wrong");
     }
   };
+  const onReorder = async(updateData:{id:string,position:number}[])=>{
+    try {
+        setIsUpdating(true);
+        await axios.put(`/api/courses/${initialData.id}/chapters/reorder`,{
+            list:updateData
+        })
+        toast.success("chapter reordered");
+        router.refresh()
+    } catch (error) {
+        toast.error("Something went wrong")
+    }finally{
+        setIsUpdating(false)
+    }
+
+  }
+  const onEdit = (id:string) =>{
+    router.push(`/teacher/courses/${initialData.id}/chapters/${id}`)
+  }
   return (
     <div className="mt-6 border bg-state-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
@@ -101,8 +120,8 @@ const ChapterForm = ({ initialData }: ChapterFormProps) => {
             )}>
                 {!initialData.chapters.length && "No chapters"}
                 <ChapterList 
-                 onEdit={()=>{}}
-                 onReorder={()=>{}}
+                 onEdit={onEdit}
+                 onReorder={onReorder}
                  items = {initialData.chapters || []}
                 />
             </div>
