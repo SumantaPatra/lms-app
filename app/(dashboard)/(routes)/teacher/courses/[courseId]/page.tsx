@@ -109,7 +109,6 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
             </div>
             <div>
               <ChapterForm initialData={course}/>
-
             </div>
            </div>
 
