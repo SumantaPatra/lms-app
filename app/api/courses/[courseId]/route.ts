@@ -32,7 +32,7 @@ export async function DELETE(
     
     if(!course) return new NextResponse("Not found error",{status:404})
 
-      console.log("chapyter",course.chapters);
+   
       
 
     for(const chapter of course.chapters){
