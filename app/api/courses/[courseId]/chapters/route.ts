@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { isAdmin } from "@/lib/teacher";
 import { auth } from "@clerk/nextjs/server"
 import { NextResponse } from "next/server"
 
@@ -11,7 +12,7 @@ export async function POST(
         const {userId} = auth();
         const {title} = await req.json();
         
-        if(!userId) return new NextResponse("Unauthorized",{status:401});
+        if(!userId || !isAdmin(userId)) return new NextResponse("Unauthorized",{status:401});
 
         const courseOwner = await db.course.findUnique({
             where:{
